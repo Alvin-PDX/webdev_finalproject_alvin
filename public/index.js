@@ -7,6 +7,7 @@ const roomNumElem = document.getElementById('roomName');
 let currStat = '';
 let currPlayer = '';
 
+//Only fetch rooms if not in a game
 function updateRoomList() {
   if (currStat === '') {
     socket.emit('roomList');
@@ -17,6 +18,7 @@ function updateRoomList() {
 updateRoomList();
 setInterval(updateRoomList, 5000);
 
+//Change the status field whenever a status update occurs
 function statusUpdate(stat) {
   currStat = stat;
   if (stat === 'notStarted') {
@@ -54,6 +56,7 @@ function statusUpdate(stat) {
   }
 }
 
+//On join, server sends the client their player info and the name of the room
 socket.on('assignPlayer', (player, roomName) => {
   currPlayer = player;
   if (player === 'red') {
@@ -69,11 +72,11 @@ socket.on('assignPlayer', (player, roomName) => {
   roomNumElem.innerHTML = roomName;
 });
 
+//Populate room list in HTML when received
 socket.on('roomList', (list) => {
   let roomSelector = document.getElementById('roomlist');
   roomSelector.innerHTML = '';
   for (const i of list) {
-    //populate roomlist
     let item = document.createElement('li');
     item.innerHTML = i + `<button onclick="joinRoom('${i}')">Join</button>`;
     roomSelector.appendChild(item);
@@ -88,12 +91,13 @@ function createRoom() {
   socket.emit('createRoom');
 }
 
+//Alerts usually won't show up as the client attempts to prevent sending invalid events
 socket.on('serverMessage', (message) => {
   alert(message);
 });
 
-function leaveRoom() {}
-
+//Receive a new board state from the server and display it on the screen
+//The first time a board state is received, removes the roomlist screen and shows the board
 socket.on('gameUpdate', (board, stat) => {
   if (currStat === '') {
     let indexWindow = document.getElementById('index');
@@ -102,6 +106,7 @@ socket.on('gameUpdate', (board, stat) => {
     gameWindow.classList.remove('hide');
   }
 
+  //populate board tiles
   let rowNum = 1;
   for (const row of board) {
     let colNum = 1;
@@ -109,8 +114,6 @@ socket.on('gameUpdate', (board, stat) => {
       let space = document.getElementById(
         String(rowNum) + 'x' + String(colNum)
       );
-      console.log(rowNum);
-      console.log(colNum);
       space.classList.remove('red', 'black');
 
       if (col === 'black') {
@@ -131,6 +134,8 @@ function sendMove(column) {
   socket.emit('move', column);
 }
 
+//listeners for clicking buttons and hovering over elements
+//A yellow arrow shows what column of the board you're about to select
 let spaces = document.querySelectorAll('td');
 spaces.forEach(function (elem) {
   elem.addEventListener('mouseover', function () {
