@@ -11,12 +11,14 @@ let session = expsess({
   cookie: {},
 });
 
-//game
+//---Game---
 
 function sendGameUpdate(game, room) {
   io.to(room).emit('gameUpdate', game.board, game.status);
 }
 
+//updateBoard() edits stored board states in place
+//It returns a string that describes if the move was successful or if it was invalid
 function updateBoard(column, roomName, player) {
   //fail cases
   if (rooms[roomName].board[0][column] != 0) return 'invalidMove';
@@ -40,6 +42,7 @@ function updateBoard(column, roomName, player) {
   }
 }
 
+//Returns a boolean: true if the given player has won in the given room, and false otherwise.
 function checkWin(player, roomName) {
   let game = rooms[roomName];
   //check for a vertical win
@@ -101,6 +104,7 @@ function checkWin(player, roomName) {
   return false;
 }
 
+//Checks the given room to see if its board has been completely filled up. If so, returns true.
 function checkDraw(roomName) {
   let game = rooms[roomName];
   for (let col = 0; col < game.board[0].length; col += 1) {
@@ -114,14 +118,16 @@ function checkDraw(roomName) {
 let roomNum = 1;
 rooms = {};
 
-//socket
+//---Socket---
 
 io.on('connection', (socket) => {
   let thisroom = '';
   let player = '';
 
+  //server receives a "move" event from the client, with the column they want to place their piece into
   socket.on('move', (column) => {
     let newBoard = updateBoard(column - 1, thisroom, player);
+    //if the move is invalid, sends a message to the client informing them
     if (newBoard === 'invalidMove') {
       socket.emit('serverMessage', `That column is full.`);
     } else if (newBoard === 'notTurn') {
@@ -129,8 +135,10 @@ io.on('connection', (socket) => {
       console.log(rooms[thisroom].status);
       socket.emit('serverMessage', `It's not your turn.`);
     } else {
-      //rooms[room] = newBoard;
+      //Send an update to the room's clients
       sendGameUpdate(rooms[thisroom], thisroom);
+
+      //If a win is detected, end the game
       if (
         rooms[thisroom].status === 'redWin' ||
         rooms[thisroom].status === 'blackWin'
@@ -142,8 +150,10 @@ io.on('connection', (socket) => {
 
   socket.on('joinRoom', (roomID) => {
     if (thisroom != '') {
+      //Reject room join request if client is already in a room
       socket.emit('serverMessage', `Already in a game`);
     } else if (rooms[roomID].status != 'notStarted') {
+      //Reject room join request if the room is full
       socket.emit('serverMessage', `Room full`);
     } else {
       socket.join(roomID);
@@ -174,6 +184,8 @@ io.on('connection', (socket) => {
       ],
       status: 'notStarted',
     };
+    //Whether the player is red or black is assigned at random.
+    //Red always goes first.
     if (Math.random() >= 0.5) {
       player = 'red';
     } else {
@@ -185,6 +197,8 @@ io.on('connection', (socket) => {
     roomNum += 1;
   });
 
+  //Send a list of rooms to the client
+  //Only sends rooms that are open
   socket.on('roomList', () => {
     roomList = [];
     for (const i in rooms) {
@@ -195,6 +209,7 @@ io.on('connection', (socket) => {
     socket.emit('roomList', roomList);
   });
 
+  //If a client disconnects, see what room they were in and end that game
   socket.on('disconnecting', () => {
     if (thisroom != '' && rooms[thisroom]) {
       if (rooms[thisroom]) rooms[thisroom].status = 'disconnect';
@@ -204,14 +219,15 @@ io.on('connection', (socket) => {
   });
 });
 
+//Periodically reset room counter to 1 if there are no rooms left.
+//This is to prevent the room numbers from growing infinitely
 setInterval(() => {
   if (Object.keys(rooms).length === 0) {
     roomNum = 1;
   }
 }, 10000);
 
-//routes
-
+//---Express Routes---
 app.get('/public/:file', (req, res) => {
   res.sendFile(__dirname + '/public/' + req.params['file'], {}, function (err) {
     if (err) {
@@ -222,11 +238,12 @@ app.get('/public/:file', (req, res) => {
   });
 });
 
+//By default, send client to homepage
 app.get('*', (req, res) => {
   res.sendFile(__dirname + '/public/game.html');
 });
 
-//server
+//---Server---
 
 http.listen(port, () => {
   console.log(`Listening at ${port}`);
