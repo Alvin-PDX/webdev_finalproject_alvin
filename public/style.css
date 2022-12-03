@@ -1,5 +1,5 @@
 body {
-  min-width: 1000px;
+  min-width: 1200px;
   width: auto;
   background-color: #153642;
 }
@@ -15,11 +15,31 @@ header {
 
 nav {
   text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  list-style:none;
+  height:50px;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid;
+  border-color: rgb(37, 37, 37);
+}
+
+nav ul {
+  margin: 0 auto;
+  display: inline-block;
 }
 
 nav li {
   display: inline-block;
-  font-size: 20px;
+  font-size: 30px;
+  font-weight: bold;
+  border-radius:10px;
+  padding: 10px 10px 10px 10px;
+  margin-right: 50px;
+}
+
+nav li a {
+  color:rgb(37, 37, 37);
 }
 
 .column {
@@ -138,6 +158,13 @@ p {
   margin: 10px 10%;
 }
 
+h2 {
+  text-align: center;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 40px;
+  margin: 10px 10%;
+}
+
 .hide {
   display: none;
 }
@@ -163,22 +190,22 @@ p {
 
 .redTurn {
   background-color: red;
-  color: gray;
+  color: white;
 }
 
 .blackTurn {
   background-color: black;
-  color: gray;
+  color: white;
 }
 
 .notStarted {
-  background-color: gray;
-  color: black;
+  background-color: rgb(37, 37, 37);
+  color: white;
 }
 
 .disconnect {
-  background-color: gray;
-  color: black;
+  background-color: rgb(37, 37, 37);
+  color: white;
 }
 
 .redWin {
@@ -192,6 +219,6 @@ p {
 }
 
 .draw {
-  background-color: gray;
-  color: black;
+  background-color: rgb(37, 37, 37);
+  color: white;
 }
