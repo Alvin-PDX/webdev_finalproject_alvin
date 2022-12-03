@@ -1,5 +1,6 @@
 # Connect Four for socket.io - CS465P Fall 2022 Final Project
-
+By Alvin Iskender
+Portland State University
 ## How to Run
 
 First, run
@@ -23,7 +24,9 @@ in config/env.js.
 In case you've never heard of it before, Connect Four is a classic two-player game where two players take turns dropping
 colored disks into a vertical 6x7 grid. Whoever can link four of their colored disk in a line horizontally, vertically, or diagonally first wins.
 
-To play, connect to the server's domain (or localhost:PORT if you're playing on a local machine). You'll have the option of selecting a room from the list on the right if there are any available, or creating one of your own. As soon as two players join a room, the game starts and the player with the red-colored disk goes first. Whenever it's your turn, select the column you'd wish to drop your piece into. The game will continue until all of the spaces have been filled up (resulting in a draw), until someone wins, or until someone leaves the room. Refreshing or closing the page will disconnect you from the room you were in, and you'll have the option to join a new one from the home page.
+To play, connect to the server's domain (or localhost:PORT if you're playing on a local machine). You'll have the option of selecting a room from the list on the right if there are any available, or creating one of your own. As soon as two players join a room, the game starts and the player with the red-colored disk goes first. 
+
+Whenever it's your turn, select the column you'd wish to drop your piece into. The game will continue until all of the spaces have been filled up (resulting in a draw), until someone wins, or until someone leaves the room. Refreshing or closing the page will disconnect you from the room you were in, and you'll have the option to join a new one from the home page.
 
 ## Libraries/Frameworks used
 
