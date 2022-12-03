@@ -1,6 +1,11 @@
 # Connect Four for socket.io - CS465P Fall 2022 Final Project
 By Alvin Iskender
 Portland State University
+
+This project is deployed at: 
+
+https://connect-four-socket.herokuapp.com/
+
 ## How to Run
 
 First, run

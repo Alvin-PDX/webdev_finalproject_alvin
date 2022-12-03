@@ -2,6 +2,7 @@ require('./config/env.js');
 
 const app = require('express')();
 var expsess = require('express-session');
+const { existsSync } = require('fs');
 const port = process.env.PORT || 5000;
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -233,7 +234,7 @@ app.get('/public/:file', (req, res) => {
     if (err) {
       console.log('Something went wrong.');
       console.log(err);
-      res.status(err.status);
+      res.status(err.status).send('404 - That page was not found');
     }
   });
 });
