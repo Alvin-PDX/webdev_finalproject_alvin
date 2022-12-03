@@ -57,7 +57,7 @@ https://socket.io/docs/v4/
 
 https://expressjs.com/en/4x/api.html
 
-The Wikipedia page for Connect Four was used referenced to verify board size and draw conditions.
+The Wikipedia page for Connect Four was referenced to verify board size and draw conditions.
 
 https://en.wikipedia.org/wiki/Connect_Four
 
